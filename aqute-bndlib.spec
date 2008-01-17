@@ -98,7 +98,6 @@ mv OSGI-OPT/src src/main/java
 %patch0 -b .sav0
 
 %build
-export JAVA_HOME=%{_jvmdir}/java-1.5.0
 export LANG=en_US.utf8
 export CLASSPATH=$(build-classpath ant)
 # now for eclipse 3.2.X
@@ -114,11 +113,11 @@ CLASSPATH=${CLASSPATH}:$(ls %{_datadir}/eclipse/plugins/org.eclipse.jdt.core_*.j
 CLASSPATH=${CLASSPATH}:$(ls %{_datadir}/eclipse/plugins/org.eclipse.equinox.common_*.jar)
 CLASSPATH=${CLASSPATH}:$(ls %{_datadir}/eclipse/plugins/org.eclipse.equinox.registry_*.jar)
 
-$JAVA_HOME/bin/javac -d target/classes $(find src/main/java -name "*.java")
-$JAVA_HOME/bin/javadoc -d target/site/apidocs -sourcepath src/main/java aQute.lib.header aQute.lib.osgi aQute.lib.qtokens aQute.lib.filter
+%{javac} -encoding utf8 -d target/classes $(find src/main/java -name "*.java")
+%{javadoc} -encoding utf8 -d target/site/apidocs -sourcepath src/main/java aQute.lib.header aQute.lib.osgi aQute.lib.qtokens aQute.lib.filter
 cp LICENSE target/classes
 pushd target/classes
-$JAVA_HOME/bin/jar cmf ../../META-INF/MANIFEST.MF ../%{name}-%{version}.jar *
+%{jar} cmf ../../META-INF/MANIFEST.MF ../%{name}-%{version}.jar *
 popd
 
 %install

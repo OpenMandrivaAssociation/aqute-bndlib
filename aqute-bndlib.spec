@@ -62,6 +62,7 @@ BuildRequires:  ecj
 BuildRequires:  eclipse-ecj
 BuildRequires:  eclipse-platform
 BuildRequires:  eclipse-rcp
+BuildRequires:  eclipse-jdt
 
 Requires(post):    jpackage-utils >= 0:1.7.3
 Requires(postun):  jpackage-utils >= 0:1.7.3

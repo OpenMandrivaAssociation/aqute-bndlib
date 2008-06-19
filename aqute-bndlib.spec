@@ -27,20 +27,19 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-%define _with_gcj_support 1
-%define gcj_support %{?_with_gcj_support:1}%{!?_with_gcj_support:%{?_without_gcj_support:0}%{!?_without_gcj_support:%{?_gcj_support:%{_gcj_support}}%{!?_gcj_support:0}}}
+%define gcj_support 0
 
 %define section   free
 
 Name:           aqute-bndlib
-Version:        0.0.203
-Release:        %mkrel 1.0.0
+Version:        0.0.255
+Release:        %mkrel 0.0.1
 Epoch:          0
 Summary:        BND Library
 License:        Apache License 2.0
 Group:          Development/Java
 URL:            http://www.aQute.biz/Code/Bnd
-Source0:        http://www.aqute.biz/repo/biz/aQute/bnd/0.0.203/bndlib-0.0.203.jar
+Source0:        http://www.aqute.biz/repo/biz/aQute/bndlib/%{version}/bndlib-%{version}.jar
 Source1:        %{name}-build.xml
 # build it with maven2-generated ant build.xml
 Patch0:         aQute-bndlib-Filter.patch
@@ -138,9 +137,7 @@ install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name} 
 
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
+%{gcj_compile}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -162,10 +159,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_javadir}/*
 %{_datadir}/maven2
 %{_mavendepmapfragdir}
-%if %{gcj_support}
-%dir %attr(-,root,root) %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/%{name}-%{version}.jar.*
-%endif
+%{gcj_files}
 
 %files javadoc
 %defattr(-,root,root,-)

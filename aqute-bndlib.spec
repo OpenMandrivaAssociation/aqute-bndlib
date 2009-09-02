@@ -33,7 +33,7 @@
 
 Name:           aqute-bndlib
 Version:        0.0.255
-Release:        %mkrel 0.0.2
+Release:        %mkrel 0.0.3
 Epoch:          0
 Summary:        BND Library
 License:        Apache License 2.0

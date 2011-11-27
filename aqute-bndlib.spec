@@ -30,7 +30,7 @@
 
 Name:           aqute-bndlib
 Version:        0.0.363
-Release:        4
+Release:        6
 Summary:        BND Library
 License:        ASL 2.0
 Group:          Development/Java

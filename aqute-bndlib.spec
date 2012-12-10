@@ -30,7 +30,7 @@
 
 Name:           aqute-bndlib
 Version:        0.0.363
-Release:        6
+Release:        4
 Summary:        BND Library
 License:        ASL 2.0
 Group:          Development/Java
@@ -40,13 +40,13 @@ Source1:        http://www.aqute.biz/repo/biz/aQute/bnd/%{version}/bnd-%{version
 Source2:        aqute-service.tar.gz
 
 BuildArch:      noarch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:  jpackage-utils >= 0:1.7.2
 BuildRequires:  java-devel >= 0:1.6.0
 BuildRequires:  ant >= 0:1.6.5
 BuildRequires:  eclipse-ecj
 BuildRequires:  eclipse-jdt
+BuildRequires:  locales-en
 
 Requires:  java >= 0:1.5.0
 Requires(post):    jpackage-utils >= 0:1.7.2
@@ -85,7 +85,8 @@ sed -i "s|import aQute.lib.filter.*;||g" src/main/java/aQute/bnd/make/ComponentD
 sed -i "s|import aQute.lib.filter.*;||g" src/main/java/aQute/bnd/make/ServiceComponent.java
 
 %build
-export LANG=en_US.utf8
+export LANG=en_US.utf-8
+export LC_ALL=en_US.utf-8
 export OPT_JAR_LIST=:
 export CLASSPATH=$(build-classpath ant)
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/plugins/org.eclipse.osgi_*.jar)
@@ -110,44 +111,39 @@ CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/dropins/jdt/plugins/org.eclipse.jd
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/dropins/jdt/plugins/org.eclipse.jdt.debug.ui_*.jar)
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/dropins/jdt/plugins/org.eclipse.jdt.launching_*.jar)
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/dropins/jdt/plugins/org.eclipse.jdt.junit_*.jar)
-CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/dropins/jdt/plugins/org.eclipse.jdt.junit.core_*.jar)
+#CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/dropins/jdt/plugins/org.eclipse.jdt.junit.core_*.jar)
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/dropins/jdt/plugins/org.eclipse.jdt.ui_*.jar)
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/plugins/org.eclipse.equinox.common_*.jar)
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/plugins/org.eclipse.equinox.registry_*.jar)
 CLASSPATH=${CLASSPATH}:$(ls /usr/lib*/eclipse/plugins/org.eclipse.swt.*.jar)
 
-%{javac} -d target/classes -target 1.5 -source 1.5 $(find src/main/java -type f -name "*.java")
-%{javadoc} -d target/site/apidocs -sourcepath src/main/java aQute.lib.header aQute.lib.osgi aQute.lib.qtokens aQute.lib.filter
+javac -d target/classes -target 1.5 -source 1.5 $(find src/main/java -type f -name "*.java")
+javadoc -d target/site/apidocs -sourcepath src/main/java aQute.lib.header aQute.lib.osgi aQute.lib.qtokens aQute.lib.filter
 cp -p LICENSE maven-dependencies.txt plugin.xml pom.xml target/classes
 for f in $(find aQute/ -type f -not -name "*.class"); do
     cp -p $f target/classes/$f
 done
 pushd target/classes
-%{jar} cmf ../../META-INF/MANIFEST.MF ../%{name}-%{version}.jar *
+jar cmf ../../META-INF/MANIFEST.MF ../%{name}-%{version}.jar *
 popd
 
 sed -i "s|\r||g" LICENSE
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 # jars
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}
-install -pm 644 target/%{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
+install -d -m 755 %{buildroot}%{_javadir}
+install -pm 644 target/%{name}-%{version}.jar %{buildroot}%{_javadir}/%{name}-%{version}.jar
 %add_to_maven_depmap biz.aQute bndlib %{version} JPP %{name}
-(cd $RPM_BUILD_ROOT%{_javadir} && for jar in *-%{version}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
+(cd %{buildroot}%{_javadir} && for jar in *-%{version}*; do ln -sf ${jar} `echo $jar| sed  "s|-%{version}||g"`; done)
 
 # pom
-install -d -m 755 $RPM_BUILD_ROOT%{_datadir}/maven2/poms
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/maven2/poms/JPP-%{name}.pom
+install -d -m 755 %{buildroot}%{_datadir}/maven2/poms
+install -m 644 %{SOURCE1} %{buildroot}%{_datadir}/maven2/poms/JPP-%{name}.pom
 
 # javadoc
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr target/site/apidocs/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+install -d -m 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
+cp -pr target/site/apidocs/* %{buildroot}%{_javadocdir}/%{name}-%{version}
+ln -s %{name}-%{version} %{buildroot}%{_javadocdir}/%{name}
 
 %post
 %update_maven_depmap

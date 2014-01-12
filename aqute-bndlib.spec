@@ -10,6 +10,10 @@ Source1:        http://repo1.maven.org/maven2/biz/aQute/bndlib/1.50.0/bndlib-1.5
 
 BuildArch:      noarch
 
+%if 0%{?fedora}
+%else
+BuildRequires:  locales-en
+%endif
 BuildRequires:  java-devel
 BuildRequires:  maven-local
 BuildRequires:  maven-surefire-provider-junit4
@@ -58,11 +62,7 @@ cp %{SOURCE1} pom.xml
 sed -i "s|\r||g" LICENSE
 
 %build
-%if 0%{?fedora}
 export LC_ALL=en_US.UTF-8
-%else
-export LC_ALL=UTF-8
-%endif
 %mvn_file :bndlib %{name}
 %mvn_build
 

@@ -58,7 +58,11 @@ cp %{SOURCE1} pom.xml
 sed -i "s|\r||g" LICENSE
 
 %build
+%if 0%{?fedora}
 export LC_ALL=en_US.UTF-8
+%else
+export LC_ALL=UTF-8
+%endif
 %mvn_file :bndlib %{name}
 %mvn_build
 

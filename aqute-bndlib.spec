@@ -1,13 +1,13 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           aqute-bndlib
 Version:        1.50.0
-Release:        7.1%{?dist}
+Release:        8%{?dist}
 Summary:        BND Library
 License:        ASL 2.0
 URL:            http://www.aQute.biz/Code/Bnd
 Source0:        http://repo1.maven.org/maven2/biz/aQute/bndlib/1.50.0/bndlib-1.50.0.jar
 Source1:        http://repo1.maven.org/maven2/biz/aQute/bndlib/1.50.0/bndlib-1.50.0.pom
-
+Patch1:		bndlib-1.50.0-java8.patch
 BuildArch:      noarch
 
 %if 0%{?fedora}
@@ -39,6 +39,7 @@ API documentation for %{name}.
 
 %prep
 %setup -q -c
+%apply_patches
 
 # fixing incomplete source directory structure
 mkdir -p src/main/java target/classes

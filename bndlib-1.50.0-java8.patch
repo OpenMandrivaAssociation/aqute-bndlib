@@ -1,0 +1,61 @@
+--- a/OSGI-OPT/src/aQute/lib/collections/MultiMap.java.orig	2014-11-07 19:36:11.897611584 +0000
++++ a/OSGI-OPT/src/aQute/lib/collections/MultiMap.java	2014-11-07 19:36:20.703610935 +0000
+@@ -24,7 +24,7 @@
+ 		return set.addAll(value);
+ 	}
+ 	
+-	public boolean remove( K key, V value ) {
++	public boolean remove( Object key, Object value ) {
+ 		Set<V> set = get(key);
+ 		if ( set == null) {
+ 			return false;
+--- a/OSGI-OPT/src/aQute/lib/osgi/Analyzer.java.orig	2014-11-07 19:18:37.520689263 +0000
++++ a/OSGI-OPT/src/aQute/lib/osgi/Analyzer.java	2014-11-07 19:19:05.720687186 +0000
+@@ -2278,7 +2278,7 @@
+ 		if (hex)
+ 			return Hex.toHexString(digester.digest().digest());
+ 		else
+-			return Base64.encodeBase64(digester.digest().digest());
++			return aQute.lib.base64.Base64.encodeBase64(digester.digest().digest());
+ 	}
+ 
+ 	/**
+@@ -2296,6 +2296,6 @@
+ 			throw new FileNotFoundException("From sha1, not found " + args[1]);
+ 
+ 		IO.copy(r.openInputStream(), digester);
+-		return Base64.encodeBase64(digester.digest().digest());
++		return aQute.lib.base64.Base64.encodeBase64(digester.digest().digest());
+ 	}
+ }
+--- a/OSGI-OPT/src/aQute/lib/osgi/Jar.java.orig	2014-11-07 19:21:38.384675939 +0000
++++ a/OSGI-OPT/src/aQute/lib/osgi/Jar.java	2014-11-07 19:21:51.962674938 +0000
+@@ -624,7 +624,7 @@
+ 				in.close();
+ 			}
+ 			for (MessageDigest d : digests)
+-				attributes.putValue(d.getAlgorithm() + "-Digest", Base64.encodeBase64(d.digest()));
++				attributes.putValue(d.getAlgorithm() + "-Digest", aQute.lib.base64.Base64.encodeBase64(d.digest()));
+ 		}
+ 	}
+ 
+--- a/OSGI-OPT/src/aQute/bnd/signing/Signer.java.orig	2014-11-07 19:20:44.944679876 +0000
++++ a/OSGI-OPT/src/aQute/bnd/signing/Signer.java	2014-11-07 19:21:11.654677908 +0000
+@@ -119,7 +119,7 @@
+             if (algorithms[a] != null) {
+                 byte[] digest = algorithms[a].digest(manbytes);
+                 ps.print(digestNames[a] + "-Digest-Manifest: ");
+-                ps.print(new Base64(digest));
++                ps.print(new aQute.lib.base64.Base64(digest));
+                 ps.print("\r\n");
+             }
+         }
+@@ -142,7 +142,7 @@
+                     if (algorithms[a] != null) {
+                         byte[] digest = algorithms[a].digest();
+                         String header = digestNames[a] + "-Digest: "
+-                                + new Base64(digest) + "\r\n";
++                                + new aQute.lib.base64.Base64(digest) + "\r\n";
+                         out.write(header.getBytes());
+                     }
+                 }

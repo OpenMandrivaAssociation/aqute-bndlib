@@ -39,7 +39,7 @@ API documentation for %{name}.
 
 %prep
 %setup -q -c
-%apply_patches
+%autopatch -p1
 
 # fixing incomplete source directory structure
 mkdir -p src/main/java target/classes

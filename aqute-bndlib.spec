@@ -4,7 +4,7 @@ Version:        1.50.0
 Release:        8%{?dist}
 Summary:        BND Library
 License:        ASL 2.0
-URL:            http://www.aQute.biz/Code/Bnd
+URL:            https://www.aQute.biz/Code/Bnd
 Source0:        http://repo1.maven.org/maven2/biz/aQute/bndlib/1.50.0/bndlib-1.50.0.jar
 Source1:        http://repo1.maven.org/maven2/biz/aQute/bndlib/1.50.0/bndlib-1.50.0.pom
 Patch1:		bndlib-1.50.0-java8.patch
